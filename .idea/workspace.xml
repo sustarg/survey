@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="b552a8d1-5ca2-418a-8c3d-89db54e57bfe" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/survey.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/app-build-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/app-path-routes-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/build-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/.previewinfo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/.rscinfo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-production/0.pack" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/client-production/index.pack" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/edge-server-production/0.pack" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/edge-server-production/index.pack" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/server-production/0.pack" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/cache/webpack/server-production/index.pack" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/diagnostics/build-diagnostics.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/diagnostics/framework.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/react-loadable-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/app-paths-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/app/_not-found/page.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/app/_not-found/page.js.nft.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/app/_not-found/page_client-reference-manifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/app/page.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/app/page.js.nft.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/app/page_client-reference-manifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/chunks/251.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/interception-route-rewrite-manifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/middleware-build-manifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/middleware-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/middleware-react-loadable-manifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/next-font-manifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/next-font-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/pages-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/pages/_app.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/pages/_app.js.nft.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/pages/_document.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/pages/_document.js.nft.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/pages/_error.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/pages/_error.js.nft.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/server-reference-manifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/server-reference-manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/server/webpack-runtime.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/b3yk0rPUJBozEuEQFJzsL/_buildManifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/b3yk0rPUJBozEuEQFJzsL/_ssgManifest.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/chunks/129f5d0a-f2d18b5c22f1fcc7.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/chunks/344-72edf5803473b35e.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/chunks/555-93a121cddcc17a26.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/chunks/app/_not-found/page-977030ebd9e5836e.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/chunks/app/layout-cef3ff56ea17e4f7.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/chunks/app/page-dfec51e3349e80d0.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/chunks/main-9dffbe0464431389.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/chunks/main-app-07824965a63d9cb8.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/chunks/pages/_app-fddfecdddd13f390.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/chunks/pages/_error-3424f96ebfa4e0b2.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/chunks/polyfills-42372ed130431b0a.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/chunks/webpack-bdb7bd3c659e8381.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/css/968f65fc2276ab93.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/media/26a46d62cd723877-s.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/media/55c55f0601d81cf3-s.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/media/581909926a08bbc8-s.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/media/8e9860b6e62d6359-s.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/media/97e0cb1ae144a2a9-s.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/media/df0a9ae256c0569c-s.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/static/media/e4af272ccee01ff0-s.p.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/trace" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/types/app/layout.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/types/app/page.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/types/cache-life.d.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.next/types/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/admin/login/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/admin/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/success-message.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/next-env.d.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/2025-08-09-add-q1-q9.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/useUrlParams.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useUrlParams.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/supabase.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/supabase.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/netlify.toml" beforeDir="false" afterPath="$PROJECT_DIR$/netlify.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="30z9WF8im9SpZ75GJ1P9zQdgDTC" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;22.13.1&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.13.1&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/callerid/WebstormProjects/survey/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b552a8d1-5ca2-418a-8c3d-89db54e57bfe" name="Changes" comment="" />
+      <created>1754619565435</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1754619565435</updated>
+      <workItem from="1754619568261" duration="168000" />
+      <workItem from="1754623918569" duration="176000" />
+      <workItem from="1754624302523" duration="80000" />
+      <workItem from="1754624480758" duration="5174000" />
+      <workItem from="1754716845087" duration="2648000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

@@ -13,6 +13,8 @@ const nextConfig = {
   },
   // Netlify에서 정적 배포를 위한 설정
   distDir: 'out',
+  // 빌드 최적화
+  swcMinify: true,
   // 환경변수 설정
   env: {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,

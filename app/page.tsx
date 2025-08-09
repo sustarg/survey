@@ -2,183 +2,152 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Heart, Star, CheckCircle, AlertCircle, User, Phone, Calendar, Building } from 'lucide-react'
+import { Heart, AlertCircle, User, Phone, Calendar, Building } from "lucide-react"
 import { useUrlParams } from "@/hooks/useUrlParams"
 import { supabase, type SurveyResponse, isSupabaseConfigured, mockSaveToDatabase } from "@/lib/supabase"
-import { Suspense } from 'react'
-import { SetupGuide } from "@/components/setup-guide"
+import { SuccessMessage } from "@/components/success-message"
 
-function SurveyContent() {
+const LIKERT_OPTIONS = [
+  { value: "5", label: "매우 그렇다" },
+  { value: "4", label: "그렇다" },
+  { value: "3", label: "보통이다" },
+  { value: "2", label: "그렇지 않다" },
+  { value: "1", label: "매우 그렇지 않다" },
+] as const
+
+const QUESTIONS: { id: keyof SurveyForm; title: string }[] = [
+  {
+    id: "q1",
+    title:
+      "1. 유공자님은 해당병원을 이용하고 계시는데 해당 병원의 진료 시간(대기시간, 치료 받는 시간 등)은 적정하다고 생각하십니까?",
+  },
+  {
+    id: "q2",
+    title: "2. 해당병원 의료진은 환우의 상태/치료방법에 대해 이해하기 쉽게 설명해줍니까?",
+  },
+  {
+    id: "q3",
+    title:
+      "3. 해당병원 의료진은 환우의 투약이나 검사, 처치 후에 생길 수 있는 부작용에 대해 이해하기 쉽게 친절하게 설명해주었습니까?",
+  },
+  {
+    id: "q4",
+    title: "4. 해당병원 직원(의료진 포함)의 응대 태도가 친절하다고 생각하십니까?",
+  },
+  {
+    id: "q5",
+    title: "5. 병원 이용을 위한 진료시간, 예약방법, 진료절차 등에 대해 안내가 잘 되어 있다고 생각하시나요?",
+  },
+  {
+    id: "q6",
+    title: "6. 해당병원 직원(의료진 포함)은 복장이 적정하다고 생각하십니까?",
+  },
+  {
+    id: "q7",
+    title: "7. 해당병원 의료진 및 직원을 신뢰할 수 있다고 생각하십니까?",
+  },
+  {
+    id: "q8",
+    title: "8. 해당병원은 국가유공자의 의료 및 재활에 기여한다고 생각하십니까?",
+  },
+  {
+    id: "q9",
+    title:
+      "9. 유공자님께서는 앞서 평가해 주신 의료서비스 내용 및 질, 직원의 응대, 이용절차, 공공적 측면 등을 모두 고려할 때, 해당병원 의료서비스에 대해 종합적으로 얼마나 만족하셨습니까?",
+  },
+]
+
+type SurveyForm = {
+  q1: string
+  q2: string
+  q3: string
+  q4: string
+  q5: string
+  q6: string
+  q7: string
+  q8: string
+  q9: string
+}
+
+export default function MedicalSurvey() {
   const { patientInfo, isValidParams } = useUrlParams()
-
-  // Supabase 설정 확인 - 설정되지 않았으면 설정 가이드 표시
-  if (!isSupabaseConfigured()) {
-    return <SetupGuide />
-  }
-
   const [currentStep, setCurrentStep] = useState(0)
-  const [formData, setFormData] = useState({
-    doctorKindness: "",
-    waitingTime: "",
-    facilityClean: "",
-    treatmentSatisfaction: "",
-    overallSatisfaction: "",
-    recommendation: "",
-    comments: ""
+  const [formData, setFormData] = useState<SurveyForm>({
+    q1: "",
+    q2: "",
+    q3: "",
+    q4: "",
+    q5: "",
+    q6: "",
+    q7: "",
+    q8: "",
+    q9: "",
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [submissionTime, setSubmissionTime] = useState<string>("")
 
-  const questions = [
-    {
-      id: "doctorKindness",
-      title: "의료진의 친절도는 어떠셨나요?",
-      type: "radio",
-      options: [
-        { value: "5", label: "매우 만족" },
-        { value: "4", label: "만족" },
-        { value: "3", label: "보통" },
-        { value: "2", label: "불만족" },
-        { value: "1", label: "매우 불만족" }
-      ]
-    },
-    {
-      id: "waitingTime",
-      title: "진료 대기시간은 적절했나요?",
-      type: "radio",
-      options: [
-        { value: "5", label: "매우 만족" },
-        { value: "4", label: "만족" },
-        { value: "3", label: "보통" },
-        { value: "2", label: "불만족" },
-        { value: "1", label: "매우 불만족" }
-      ]
-    },
-    {
-      id: "facilityClean",
-      title: "병원 시설의 청결도는 어떠셨나요?",
-      type: "radio",
-      options: [
-        { value: "5", label: "매우 만족" },
-        { value: "4", label: "만족" },
-        { value: "3", label: "보통" },
-        { value: "2", label: "불만족" },
-        { value: "1", label: "매우 불만족" }
-      ]
-    },
-    {
-      id: "treatmentSatisfaction",
-      title: "받으신 진료에 대해 만족하시나요?",
-      type: "radio",
-      options: [
-        { value: "5", label: "매우 만족" },
-        { value: "4", label: "만족" },
-        { value: "3", label: "보통" },
-        { value: "2", label: "불만족" },
-        { value: "1", label: "매우 불만족" }
-      ]
-    },
-    {
-      id: "overallSatisfaction",
-      title: "전반적으로 만족하시나요?",
-      type: "radio",
-      options: [
-        { value: "5", label: "매우 만족" },
-        { value: "4", label: "만족" },
-        { value: "3", label: "보통" },
-        { value: "2", label: "불만족" },
-        { value: "1", label: "매우 불만족" }
-      ]
-    },
-    {
-      id: "recommendation",
-      title: "다른 분들께 추천하시겠나요?",
-      type: "radio",
-      options: [
-        { value: "5", label: "적극 추천" },
-        { value: "4", label: "추천" },
-        { value: "3", label: "보통" },
-        { value: "2", label: "추천하지 않음" },
-        { value: "1", label: "절대 추천하지 않음" }
-      ]
-    },
-    {
-      id: "comments",
-      title: "추가로 하고 싶은 말씀이 있으시면 적어주세요",
-      type: "textarea"
-    }
-  ]
-
-  const handleInputChange = (questionId: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [questionId]: value
-    }))
+  const handleInputChange = (id: keyof SurveyForm, value: string) => {
+    setFormData((prev) => ({ ...prev, [id]: value }))
   }
 
   const handleNext = () => {
-    if (currentStep < questions.length - 1) {
-      setCurrentStep(currentStep + 1)
-    }
+    if (currentStep < QUESTIONS.length - 1) setCurrentStep(currentStep + 1)
   }
 
   const handlePrevious = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1)
-    }
+    if (currentStep > 0) setCurrentStep(currentStep - 1)
   }
 
   const handleSubmit = async () => {
     if (!patientInfo) return
-
     setIsSubmitting(true)
-    setSubmitError(null)
-
     try {
-      const surveyData: Omit<SurveyResponse, 'id' | 'created_at'> = {
+      const payload: Omit<SurveyResponse, "id" | "created_at"> = {
         patient_name: patientInfo.name,
         patient_phone: patientInfo.phone,
         department: patientInfo.department,
         visit_date: patientInfo.visitDate,
-        doctor_kindness: parseInt(formData.doctorKindness),
-        waiting_time: parseInt(formData.waitingTime),
-        facility_clean: parseInt(formData.facilityClean),
-        treatment_satisfaction: parseInt(formData.treatmentSatisfaction),
-        overall_satisfaction: parseInt(formData.overallSatisfaction),
-        recommendation: parseInt(formData.recommendation),
-        comments: formData.comments || null
+        q1: Number.parseInt(formData.q1) || null,
+        q2: Number.parseInt(formData.q2) || null,
+        q3: Number.parseInt(formData.q3) || null,
+        q4: Number.parseInt(formData.q4) || null,
+        q5: Number.parseInt(formData.q5) || null,
+        q6: Number.parseInt(formData.q6) || null,
+        q7: Number.parseInt(formData.q7) || null,
+        q8: Number.parseInt(formData.q8) || null,
+        q9: Number.parseInt(formData.q9) || null,
       }
 
-      // Supabase가 설정되어 있는지 확인
       if (isSupabaseConfigured() && supabase) {
-        const { error } = await supabase
-          .from('survey_responses')
-          .insert([surveyData])
-
-        if (error) {
-          throw error
-        }
+        const { error } = await supabase.from("survey_responses").insert([payload])
+        if (error) throw error
       } else {
-        // 개발 환경에서는 mock 함수 사용
-        console.warn('Supabase not configured. Using mock save function.')
-        await mockSaveToDatabase(surveyData)
+        await mockSaveToDatabase(payload)
       }
 
+      const nowKST = new Date().toLocaleString("ko-KR", {
+        timeZone: "Asia/Seoul",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+      setSubmissionTime(nowKST)
       setIsSubmitted(true)
-    } catch (error) {
-      console.error('Error submitting survey:', error)
-      setSubmitError('설문 제출 중 오류가 발생했습니다. 다시 시도해주세요.')
+    } catch {
+      // 사용자에게 오류 내용 노출하지 않음
+      setIsSubmitted(false)
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  // URL 파라미터가 유효하지 않은 경우
+  // 파라미터가 유효하지 않으면 간단한 안내만 표시 (오류 내용/문의 문구 비표시)
   if (!isValidParams) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 p-4 md:p-8">
@@ -186,20 +155,7 @@ function SurveyContent() {
           <Card className="text-center p-8">
             <CardContent className="space-y-6">
               <AlertCircle className="w-20 h-20 text-red-500 mx-auto" />
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
-                잘못된 접근입니다
-              </h1>
-              <p className="text-xl md:text-2xl text-gray-600 leading-relaxed">
-                올바른 링크를 통해 접속해주세요.
-                <br />
-                문의사항이 있으시면 병원 접수처로 연락해주세요.
-              </p>
-              <div className="text-lg text-gray-500 mt-4">
-                <p>필요한 정보: 환자명, 전화번호, 진료과, 진료일자</p>
-                <p className="text-sm mt-2">
-                  예시: ?name=홍길동&phone=010-1234-5678&dept=내과&date=2024-01-15
-                </p>
-              </div>
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-800">잘못된 접근입니다</h1>
             </CardContent>
           </Card>
         </div>
@@ -207,50 +163,26 @@ function SurveyContent() {
     )
   }
 
-  const currentQuestion = questions[currentStep]
-  const progress = ((currentStep + 1) / questions.length) * 100
+  const currentQuestion = QUESTIONS[currentStep]
+  const progress = ((currentStep + 1) / QUESTIONS.length) * 100
 
   if (isSubmitted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 p-4 md:p-8">
-        <div className="max-w-2xl mx-auto">
-          <Card className="text-center p-8">
-            <CardContent className="space-y-6">
-              <CheckCircle className="w-20 h-20 text-green-500 mx-auto" />
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
-                설문 완료!
-              </h1>
-              <p className="text-xl md:text-2xl text-gray-600 leading-relaxed">
-                <strong>{patientInfo?.name}</strong>님,
-                <br />
-                소중한 의견을 주셔서 감사합니다.
-                <br />
-                더 나은 의료 서비스를 위해 활용하겠습니다.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    )
+    return <SuccessMessage patientName={patientInfo?.name || ""} submissionTime={submissionTime} />
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 p-4 md:p-8">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-3xl mx-auto">
         {/* 헤더 */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Heart className="w-10 h-10 text-red-500" />
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
-              의료 고객만족도 조사
-            </h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-800">의료 고객만족도 조사</h1>
           </div>
-          <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
-            더 나은 의료 서비스를 위해 여러분의 소중한 의견을 들려주세요
-          </p>
+          <p className="text-lg md:text-xl text-gray-600 leading-relaxed">아래 문항에 해당하는 답변을 선택해 주세요.</p>
         </div>
 
-        {/* 환자 정보 표시 */}
+        {/* 환자 정보 */}
         <Card className="mb-8 bg-blue-50 border-blue-200">
           <CardHeader className="pb-4">
             <CardTitle className="text-xl md:text-2xl font-bold text-blue-800 flex items-center gap-2">
@@ -290,97 +222,72 @@ function SurveyContent() {
           </CardContent>
         </Card>
 
-        {/* 진행률 표시 */}
+        {/* 진행률 */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
+            <span className="text-lg font-medium text-gray-700">진행률: {Math.round(progress)}%</span>
             <span className="text-lg font-medium text-gray-700">
-              진행률: {Math.round(progress)}%
-            </span>
-            <span className="text-lg font-medium text-gray-700">
-              {currentStep + 1} / {questions.length}
+              {currentStep + 1} / {QUESTIONS.length}
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-3">
-            <div 
+            <div
               className="bg-blue-500 h-3 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
         </div>
 
-        {/* 질문 카드 */}
+        {/* 질문 */}
         <Card className="mb-8">
           <CardHeader className="pb-4">
             <CardTitle className="text-2xl md:text-3xl font-bold text-gray-800 leading-relaxed">
               {currentQuestion.title}
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            {currentQuestion.type === "radio" && (
-              <RadioGroup
-                value={formData[currentQuestion.id as keyof typeof formData]}
-                onValueChange={(value) => handleInputChange(currentQuestion.id, value)}
-                className="space-y-4"
-              >
-                {currentQuestion.options?.map((option) => (
-                  <div key={option.value} className="flex items-center space-x-4 p-4 rounded-lg border hover:bg-gray-50 transition-colors">
-                    <RadioGroupItem 
-                      value={option.value} 
-                      id={option.value}
-                      className="w-6 h-6"
-                    />
-                    <Label 
-                      htmlFor={option.value} 
-                      className="text-xl md:text-2xl font-medium cursor-pointer flex-1 leading-relaxed"
-                    >
-                      {option.label}
-                    </Label>
-                    {option.value === "5" && <Star className="w-6 h-6 text-yellow-500" />}
-                    {option.value === "4" && <Star className="w-6 h-6 text-yellow-400" />}
-                  </div>
-                ))}
-              </RadioGroup>
-            )}
-
-            {currentQuestion.type === "textarea" && (
-              <Textarea
-                value={formData[currentQuestion.id as keyof typeof formData]}
-                onChange={(e) => handleInputChange(currentQuestion.id, e.target.value)}
-                placeholder="자유롭게 의견을 작성해주세요..."
-                className="min-h-32 text-xl p-4 leading-relaxed"
-              />
-            )}
+          <CardContent className="space-y-4">
+            <RadioGroup
+              value={formData[currentQuestion.id]}
+              onValueChange={(v) => handleInputChange(currentQuestion.id, v)}
+              className="space-y-4"
+            >
+              {LIKERT_OPTIONS.map((option) => (
+                <div
+                  key={option.value}
+                  className="flex items-center space-x-4 p-4 rounded-lg border hover:bg-gray-50 transition-colors"
+                >
+                  <RadioGroupItem
+                    value={option.value}
+                    id={`${currentQuestion.id}-${option.value}`}
+                    className="w-6 h-6"
+                  />
+                  <Label
+                    htmlFor={`${currentQuestion.id}-${option.value}`}
+                    className="text-xl md:text-2xl font-medium cursor-pointer flex-1 leading-relaxed"
+                  >
+                    {option.label}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
           </CardContent>
         </Card>
 
-        {/* 에러 메시지 */}
-        {submitError && (
-          <Card className="mb-4 bg-red-50 border-red-200">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2 text-red-700">
-                <AlertCircle className="w-5 h-5" />
-                <p className="text-lg">{submitError}</p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* 네비게이션 버튼 */}
+        {/* 네비게이션 */}
         <div className="flex justify-between gap-4">
           <Button
             onClick={handlePrevious}
             disabled={currentStep === 0}
             variant="outline"
-            className="text-xl px-8 py-4 h-auto flex-1 max-w-40"
+            className="text-xl px-8 py-4 h-auto flex-1 max-w-40 bg-transparent"
           >
             이전
           </Button>
-          
-          {currentStep === questions.length - 1 ? (
+          {currentStep === QUESTIONS.length - 1 ? (
             <Button
               onClick={handleSubmit}
               className="text-xl px-8 py-4 h-auto flex-1 bg-green-600 hover:bg-green-700"
-              disabled={!formData[currentQuestion.id as keyof typeof formData] || isSubmitting}
+              disabled={!formData[currentQuestion.id] || isSubmitting}
             >
               {isSubmitting ? "제출 중..." : "설문 완료"}
             </Button>
@@ -388,35 +295,13 @@ function SurveyContent() {
             <Button
               onClick={handleNext}
               className="text-xl px-8 py-4 h-auto flex-1"
-              disabled={!formData[currentQuestion.id as keyof typeof formData]}
+              disabled={!formData[currentQuestion.id]}
             >
               다음
             </Button>
           )}
         </div>
-
-        {/* 도움말 */}
-        <div className="mt-8 text-center">
-          <p className="text-lg text-gray-500">
-            문의사항이 있으시면 병원 접수처로 연락해주세요
-          </p>
-        </div>
       </div>
     </div>
-  )
-}
-
-export default function MedicalSurvey() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 p-4 md:p-8 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-xl text-gray-600">로딩 중...</p>
-        </div>
-      </div>
-    }>
-      <SurveyContent />
-    </Suspense>
   )
 }
