@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -8,8 +9,6 @@ import { Label } from "@/components/ui/label"
 import { Heart, AlertCircle, User, Phone, Calendar, Building } from "lucide-react"
 import { supabase, type SurveyResponse, isSupabaseConfigured, mockSaveToDatabase } from "@/lib/supabase"
 import { SuccessMessage } from "@/components/success-message"
-
-type InitialParams = { [key: string]: string | string[] | undefined }
 
 type PatientInfo = {
   name: string
@@ -58,32 +57,6 @@ const validateDepartment = (dept: string): boolean => {
     "신경과",
   ]
   return validDepartments.includes(dept.trim())
-}
-
-function parsePatientFromParams(initialParams: InitialParams) {
-  const get = (k: string) => {
-    const v = initialParams[k]
-    return Array.isArray(v) ? (v[0] ?? "") : (v ?? "")
-  }
-  const name = (get("name") || "").trim()
-  const phone = (get("phone") || "").trim()
-  const department = (get("dept") || "").trim()
-  const visitDate = (get("date") || "").trim()
-
-  const errors: string[] = []
-  if (!name) errors.push("required:name")
-  if (!phone) errors.push("required:phone")
-  if (!department) errors.push("required:dept")
-  if (!visitDate) errors.push("required:date")
-
-  if (name && !validateName(name)) errors.push("invalid:name")
-  if (phone && !validatePhoneNumber(phone)) errors.push("invalid:phone")
-  if (department && !validateDepartment(department)) errors.push("invalid:dept")
-  if (visitDate && !validateDate(visitDate)) errors.push("invalid:date")
-
-  const isValid = errors.length === 0
-  const patientInfo: PatientInfo | null = isValid ? { name, phone, department, visitDate } : null
-  return { patientInfo, isValidParams: isValid }
 }
 
 const LIKERT_OPTIONS = [
@@ -138,8 +111,32 @@ const QUESTIONS = [
 
 type SurveyForm = Record<(typeof QUESTIONS)[number]["id"], string>
 
-export default function SurveyClient({ initialParams }: { initialParams: InitialParams }) {
-  const { patientInfo, isValidParams } = useMemo(() => parsePatientFromParams(initialParams), [initialParams])
+export default function SurveyClient() {
+  // Safe on client; Suspense boundary is provided by app/page.tsx
+  const searchParams = useSearchParams()
+  const paramsKey = searchParams.toString()
+
+  const { patientInfo, isValidParams } = useMemo(() => {
+    const name = (searchParams.get("name") || "").trim()
+    const phone = (searchParams.get("phone") || "").trim()
+    const department = (searchParams.get("dept") || "").trim()
+    const visitDate = (searchParams.get("date") || "").trim()
+
+    const errors: string[] = []
+    if (!name) errors.push("required:name")
+    if (!phone) errors.push("required:phone")
+    if (!department) errors.push("required:dept")
+    if (!visitDate) errors.push("required:date")
+
+    if (name && !validateName(name)) errors.push("invalid:name")
+    if (phone && !validatePhoneNumber(phone)) errors.push("invalid:phone")
+    if (department && !validateDepartment(department)) errors.push("invalid:dept")
+    if (visitDate && !validateDate(visitDate)) errors.push("invalid:date")
+
+    const ok = errors.length === 0
+    const info: PatientInfo | null = ok ? { name, phone, department, visitDate } : null
+    return { patientInfo: info, isValidParams: ok }
+  }, [paramsKey, searchParams])
 
   const [currentStep, setCurrentStep] = useState(0)
   const [formData, setFormData] = useState<SurveyForm>({

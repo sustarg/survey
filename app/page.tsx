@@ -1,5 +1,9 @@
 "use client"
+import { Suspense } from "react"
 import SurveyClient from "@/components/survey-client"
+
+// Ensure static export for Netlify (no server-side usage of searchParams)
+export const dynamic = "force-static"
 
 const LIKERT_OPTIONS = [
   { value: "5", label: "매우 그렇다" },
@@ -63,10 +67,19 @@ type SurveyForm = {
   q9: string
 }
 
-export default function Page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined }
-}) {
-  return <SurveyClient initialParams={searchParams} />
+export default function Page() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 p-4 md:p-8 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4" />
+            <p className="text-xl text-gray-600">로딩 중...</p>
+          </div>
+        </div>
+      }
+    >
+      <SurveyClient />
+    </Suspense>
+  )
 }
